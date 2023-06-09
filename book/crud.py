@@ -35,8 +35,8 @@ def get_books():
     return docs
 
 
-def get_by_id(id:ObjectId):
-    book = books.find_one({"_id": id})
+def get_by_id(id: str):
+    book = books.find_one({"_id": ObjectId(id)})
     book["_id"] = str(book["_id"])
     return book
 

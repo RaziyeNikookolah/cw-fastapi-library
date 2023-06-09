@@ -16,7 +16,7 @@ class BookRequest(BaseModel):
 
 class BookInDB(BookRequest):
     availability_status: BookAvailability
-
+    _id: str
 
 class BookDisplay(BaseModel):
     title: str
