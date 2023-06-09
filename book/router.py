@@ -1,8 +1,8 @@
-from fastapi import APIRouter, status, HTTPException, Depends
-from typing import List
-from book.model import BookAvailability, BookInDB, BookRequest, BookDisplay
+from fastapi import APIRouter, status, HTTPException, Depends, Query
+from typing import List, Annotated
+from book.model import BookAvailability, BookInDB, BookRequest, BookDisplay, SearchRequest
 from user.auth import get_current_user, check_admin
-from book.crud import get_by_id, get_books, insert_book
+from book.crud import get_by_id, get_books, insert_book, search
 
 
 router = APIRouter(prefix="/books", tags=["Book"])
@@ -34,6 +34,15 @@ def get_book(id: str):
     if not book:
         raise HTTPException(status.HTTP_404_NOT_FOUND)
     return book
+
+@router.post(
+    "/search"
+)
+def search_book(search_item : Annotated[str, Query(...,enum=["title","auther","genre"])] ,input: str):
+    print(111111)
+    result=search(search_item, input)
+    return result
+
 
 
 # @router.put("/{title}", dependencies=[Depends(check_admin)])

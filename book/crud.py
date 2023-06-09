@@ -1,7 +1,7 @@
 # from cerberus import Validator
 from setting import db
 from bson.objectid import ObjectId
-from book.model import BookAvailability
+from book.model import BookAvailability, SearchItem
 
 books = db['books']
 
@@ -42,3 +42,9 @@ def get_by_id(id: str):
 
 def get_by_title(title):
     return books.find({"title": title})
+
+def search(type: SearchItem, input: str):
+    print(222222)
+    test={f"'{type}'": input}
+    print(test)
+    return books.find(test)
