@@ -1,5 +1,6 @@
 from fastapi import APIRouter, status, HTTPException, Depends
 from typing import List
+from book.model import BookAvailability, BookInDB, BookRequest, BookDisplay
 from user.auth import get_current_user, check_admin
 
 router = APIRouter(prefix="/books", tags=["Post"])
@@ -9,7 +10,7 @@ books = dict()
 
 
 @router.get(
-    "/", response_model=List[PostDb], dependencies=[Depends(get_current_user)]
+    "/", response_model=List[BookDisplay], dependencies=[Depends(get_current_user)]
 )
 def get_books():
     return list(books.values())
@@ -18,46 +19,46 @@ def get_books():
 @router.post(
     "/", status_code=status.HTTP_201_CREATED, dependencies=[Depends(get_current_user)]
 )
-def create_post(post: BasePost):
+def create_book(book: BookRequest):
 
-    if post.title in books:
+    if book.title in books:
         raise HTTPException(status.HTTP_400_BAD_REQUEST)
 
-    books[post.title] = post
-    return post
+    books[book.title] = post
+    return book
 
 
 @router.get(
-    "/{title}", response_model=PostDb, dependencies=[Depends(get_current_user)]
+    "/{title}", response_model=BookInDB, dependencies=[Depends(get_current_user)]
 )
-def get_post(title: str):
+def get_book(title: str):
 
-    post = books.get(title)
+    book = books.get(title)
 
-    if not post:
+    if not book:
 
         raise HTTPException(status.HTTP_404_NOT_FOUND)
-    return post
+    return book
 
 
 @router.put("/{title}", dependencies=[Depends(check_admin)])
-def update_post(title: str, post_new):
+def update_post(title: str, book_new):
 
-    post_pr = books.get(title)
+    book_pr = books.get(title)
 
-    if not post_pr:
+    if not book_pr:
 
         raise HTTPException(status.HTTP_404_NOT_FOUND)
 
-    books[post_new.title] = post_new
+    books[book_new.title] = book_new
 
-    return {"message": "post updated"}
+    return book_new
 
 
 @router.delete("/{title}", dependencies=[Depends(check_admin)])
-def delete_post(title: str):
-    post = books.get(title)
-    if not post:
+def delete_book(title: str):
+    book = books.get(title)
+    if not book:
         raise HTTPException(status.HTTP_404_NOT_FOUND)
     books.pop(title)
-    return {"message": "post deleted"}
+    return {"message": "book deleted"}

@@ -40,11 +40,30 @@ def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.post("/register", status_code=status.HTTP_201_CREATED, response_model=UserDisplay)
+@router.post("/register", status_code=status.HTTP_201_CREATED, response_model=UserDisplay, summary="Regiser user")
 def create_user(user: UserRequest) -> Any:
     if user.username in users:
         raise HTTPException(status.HTTP_400_BAD_REQUEST)
     # user.password = get_password_hash(user.password)
     user = UserInDB(**user.dict())
     users[user.username] = user
+    return user
+
+
+@router.delete("/delete", status_code=status.HTTP_201_CREATED, response_model=UserDisplay, summary="Deleting user")
+def delete_user(username: str) -> Any:
+    if username in users:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST)
+    # user.password = get_password_hash(user.password)
+    user = UserInDB(**user.dict())
+    users.pop(username)
+
+
+@router.put("/update", status_code=status.HTTP_201_CREATED, response_model=UserDisplay, summary="Update user")
+def update_user(username: str, user: UserRequest) -> Any:
+    if username in users:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST)
+    # user.password = get_password_hash(user.password)
+    user = UserInDB(**user.dict())
+    users[username] = user
     return user
