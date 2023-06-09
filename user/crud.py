@@ -1,7 +1,7 @@
 # from cerberus import Validator
 from user.model import UserRole
 from setting import db
-import bson
+from bson.objectid import ObjectId
 
 
 users = db['users']
@@ -14,11 +14,10 @@ def insert_user(username, password):
     new_user = {"username": username, "password": password,
                 "role": UserRole.REGULAR.value}
 
-    inserted_user = users.insert_one(new_user)
+    inserted_user_id = users.insert_one(new_user).inserted_id
+    user = get_by_id(inserted_user_id)
+    return user
 
-    print("*"*20)
-    print(get_by_id(bson.ObjectId("6482cced92ae4051c7580681")))
-    # return inserted_user
 
 
 def delete_user(username):
@@ -34,7 +33,10 @@ def update_user(username, password):
 
 
 def get_users():
-    docs = users.find()
+    docs = list(users.find())
+    for user in docs:
+        user["_id"] = str(user["_id"])
+        user.pop("password")
     return docs
 
 
@@ -42,8 +44,13 @@ def get_by_username(username):
     return users.find_one({"username": username})
 
 
-def get_by_id(id):
-    return users.find_one({"_id": id})
+def get_by_id(id:ObjectId):
+    user = users.find_one({"_id": id})
+    user["_id"] = str(user["_id"])
+    return user
+
+
+
 
 # # make super admin
 # user = {"username": "admin",

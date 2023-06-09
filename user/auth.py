@@ -2,11 +2,11 @@ from datetime import datetime, timedelta
 from typing import Annotated
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, HTTPException, status
-import jwt
+from jose import jwt
 from user.crud import users
 from user.model import UserInDB, UserRequest, UserDisplay, UserRole
 from setting import setting
-
+from user.crud import get_by_username
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
 
@@ -34,9 +34,9 @@ credentials_exception = HTTPException(
 
 
 def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
-
+    print(token)
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, SECRET_KEY, ALGORITHM)
         username: str = payload.get("sub")
         print(username)
         if username is None:
@@ -44,7 +44,7 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
 
     except:
         raise credentials_exception
-    user = UserInDB(**(users.get(username)))
+    user = UserInDB(**get_by_username(username))
     if user is None:
         raise credentials_exception
     return user

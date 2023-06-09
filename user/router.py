@@ -50,8 +50,8 @@ def create_user(user: UserRequest) -> Any:
     # user.password = get_password_hash(user.password)
     # user = UserInDB(**user.dict())
     inserted_user = insert_user(user.username, user.password)
-
-    # return
+    inserted_user.pop('password')
+    return inserted_user
 
 
 # @router.delete("/delete", status_code=status.HTTP_201_CREATED, response_model=UserDisplay, summary="Deleting user")

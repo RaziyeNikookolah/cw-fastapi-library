@@ -13,9 +13,10 @@ class UserRequest(BaseModel):
 
 
 class UserInDB(UserRequest):
-    role: UserRole = UserRole.REGULAR.value
+    role: UserRole
 
 
 class UserDisplay(BaseModel):
+    _id: str
     username: str
     role: UserRole
