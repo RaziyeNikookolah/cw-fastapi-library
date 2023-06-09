@@ -1,11 +1,11 @@
-from cerberus import Validator
+# from cerberus import Validator
 from setting import db
 
 
 books = db['books']
 
 
-books.create_index('title', unique=True)
+# books.create_index('title', unique=True)
 
 
 def insert_book(title, author, publication_year, genre, availability_status):

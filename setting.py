@@ -1,10 +1,15 @@
-
-
 from dotenv import load_dotenv
 from pathlib import Path
+from pymongo import MongoClient
 from os import getenv
+
+
 env_path = Path(".") / ".env"
 load_dotenv(dotenv_path=env_path)
+
+
+client = MongoClient("mongodb://localhost:27017/")
+db = client['library']
 
 
 class Setting:

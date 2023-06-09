@@ -18,5 +18,7 @@ class BookInDB(BookRequest):
     availability_status: BookAvailability
 
 
-class BookDisplay(BookRequest):
-    ...
+class BookDisplay(BaseModel):
+    title: str
+    author: str
+    genre: str

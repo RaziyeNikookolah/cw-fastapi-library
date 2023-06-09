@@ -24,7 +24,7 @@ def create_book(book: BookRequest):
     if book.title in books:
         raise HTTPException(status.HTTP_400_BAD_REQUEST)
 
-    books[book.title] = post
+    books[book.title] = book
     return book
 
 
