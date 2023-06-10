@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from enum import Enum
 from datetime import datetime
+from typing import List
 
 
 class BookAvailability(str, Enum):
@@ -23,7 +24,7 @@ class BookRequest(BaseModel):
     author: Author
     publication_year: int
     genre: str
-    borrowdata: list(BorrowData)
+    borrowdata: List[BorrowData]
 
 
 class BookInDB(BookRequest):
@@ -45,4 +46,4 @@ class SearchItem(str, Enum):
 
 class SearchRequest(BaseModel):
     type: SearchItem
-    input:str
+    input: str

@@ -40,11 +40,14 @@ def get_by_id(id: str):
     book["_id"] = str(book["_id"])
     return book
 
+
 def get_by_title(title):
     return books.find({"title": title})
 
+
 def search(type: SearchItem, input: str):
-    print(222222)
-    test={f"'{type}'": input}
-    print(test)
-    return books.find(test)
+    docs=list(books.find({f'{type}': input}))
+    for book in docs:
+        book["_id"] = str(book["_id"])
+    print(docs)
+    return docs
