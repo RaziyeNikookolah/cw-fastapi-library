@@ -1,7 +1,7 @@
 # from cerberus import Validator
 from setting import db
 from bson.objectid import ObjectId
-from book.model import BookAvailability, SearchItem
+from book.model import BookAvailability, SearchItem,BookRequest
 
 books = db['books']
 
@@ -9,10 +9,8 @@ books = db['books']
 # books.create_index('title', unique=True)
 
 
-def insert_book(title, author, publication_year, genre):
-    new_book = {"title": title, "author": author,
-                "publication_year": publication_year, "genre": genre, "availability_status": BookAvailability.AVAILABLE.value}
-    inserted_book_id = books.insert_one(new_book).inserted_id
+def insert_book(book_request:BookRequest):
+    inserted_book_id = books.insert_one(book_request.dict()).inserted_id
     book = get_by_id(inserted_book_id)
     return book
 
@@ -49,5 +47,4 @@ def search(type: SearchItem, input: str):
     docs=list(books.find({f'{type}': input}))
     for book in docs:
         book["_id"] = str(book["_id"])
-    print(docs)
     return docs

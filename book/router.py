@@ -21,7 +21,7 @@ def get_all_books():
     "/", status_code=status.HTTP_201_CREATED
 )
 def create_book(book: BookRequest):
-    inserted_book = insert_book(**book.dict())
+    inserted_book = insert_book(book)
     return inserted_book
     
 
